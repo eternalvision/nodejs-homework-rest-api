@@ -1,24 +1,23 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
 
-router.get('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const { validateCreate, validateUpdate, validateId } = require("../../middlewares");
 
-router.get('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const { contacts: ctrl } = require("../../controllers");
 
-router.post('/', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+const router = express.Router();
 
-router.delete('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+//TODO Вывод всех
+router.get("/", ctrl.listContacts);
 
-router.patch('/:contactId', async (req, res, next) => {
-  res.json({ message: 'template message' })
-})
+//TODO Вывод одного
+router.get("/:id", validateId, ctrl.getContactById);
 
-module.exports = router
+//TODO Добавление
+router.post("/", validateCreate, ctrl.addContact);
+
+//TODO Обновление
+router.put("/:id", validateId, validateUpdate, ctrl.updateById);
+
+//TODO Удаление
+router.delete("/:id", validateId, ctrl.removeContact);
+module.exports = router;
