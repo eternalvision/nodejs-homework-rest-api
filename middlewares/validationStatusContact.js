@@ -1,15 +1,15 @@
 const validationStatusContact = (schema) => {
   return async (req, res, next) => {
-    const { error } = await schema.validate(req.body);
+    const { error } = await schema.validate(req.body)
     if (error) {
       res.status(400).json({
-        status: "Error",
+        status: 'Error',
         code: 400,
-        message: "missing field favorite",
-      });
-      return;
+        message: 'missing field favorite',
+      })
+      return
     }
-    next();
-  };
-};
-module.exports = validationStatusContact;
+    next()
+  }
+}
+module.exports = validationStatusContact
