@@ -1,12 +1,12 @@
 //? библиотека для генерации ошибок
 const createError = require("http-errors");
 
-const contactsOperations = require("../../model/contacts");
+const { Contact } = require("../../models");
 
 const getContactById = async (req, res) => {
   //? найти по id
   const { id } = req.params;
-  const result = await contactsOperations.getContactById(id);
+  const result = await Contact.findById(id);
 
   //? проверка на существование id
   if (!result) {
