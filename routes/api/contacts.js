@@ -1,28 +1,26 @@
-const express = require("express");
+const express = require('express')
+const router = express.Router()
+const {
+  joiSchema,
+  joiSchemaStatusContact
+} = require('../../models')
+const {
+  validation,
+  controllerWrapper,
+  validationStatusContact,
+} = require('../../middlewares')
+const { contacts: ctrl } = require('../../controllers')
 
-const { validation, ctrlWrapper } = require("../../middlewares");
-const { joiSchema, favoriteJoiSchema } = require("../../models/contact");
+router.get('/', controllerWrapper(ctrl.getAll))
 
-const { contacts: ctrl } = require("../../controllers");
+router.get('/:contactId', controllerWrapper(ctrl.getById))
 
-const router = express.Router();
+router.post('/', validation(joiSchema), controllerWrapper(ctrl.add))
 
-//TODO Вывод всех
-router.get("/", ctrlWrapper(ctrl.listContacts));
+router.put('/:contactId', validation(joiSchema), controllerWrapper(ctrl.updateById))
 
-//TODO Вывод одного
-router.get("/:id", ctrlWrapper(ctrl.getContactById));
+router.patch('/:contactId/favorite', validationStatusContact(joiSchemaStatusContact), controllerWrapper(ctrl.updateStatusContact)) // оновлення контакта тільки по полю favorite
 
-//TODO Добавление
-router.post("/", validation(joiSchema), ctrlWrapper(ctrl.addContact));
+router.delete('/:contactId', controllerWrapper(ctrl.removeById))
 
-//TODO Обновление
-router.put("/:id", validation(joiSchema), ctrlWrapper(ctrl.updateById));
-
-//TODO Обновление PATCH
-router.patch("/:id/favorite", validation(favoriteJoiSchema), ctrlWrapper(ctrl.updateStatusContact));
-
-//TODO Удаление
-router.delete("/:id", ctrlWrapper(ctrl.removeContact));
-
-module.exports = router;
+module.exports = router

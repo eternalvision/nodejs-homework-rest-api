@@ -1,23 +1,15 @@
-//! получает схему
 const validation = (schema) => {
-  //
-  //! создает другую функцию
-  return (req, res, next) => {
-    //
-    //! берет реквестбоди, закидывает схему
-    const { error } = schema.validate(req.body);
-    //
+  return async (req, res, next) => {
+    const { error } = await schema.validate(req.body)
     if (error) {
-      //! если есть ошибка добавляем 400 статус
-      error.status = 400;
-      //
-      //! передаем дальше обработку
-      next(error);
+      res.status(400).json({
+        status: 'Error',
+        code: 400,
+        message: error.message
+      })
+      return
     }
-    //
-    //! дальше передаем без ошибок
-    next();
-  };
-};
-
-module.exports = validation;
+    next()
+  }
+}
+module.exports = validation
