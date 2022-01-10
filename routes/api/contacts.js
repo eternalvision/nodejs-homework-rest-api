@@ -1,23 +1,23 @@
 const express = require("express");
-
-const { validateCreate, validateUpdate, validateId } = require("../../middlewares");
-
+const router = express.Router();
+const { joiSchema, joiSchemaStatusContact } = require("../../models");
+const { validation, controllerWrapper, validationStatusContact } = require("../../middlewares");
 const { contacts: ctrl } = require("../../controllers");
 
-const router = express.Router();
+router.get("/", controllerWrapper(ctrl.getAll));
 
-//TODO Вывод всех
-router.get("/", ctrl.listContacts);
+router.get("/:contactId", controllerWrapper(ctrl.getById));
 
-//TODO Вывод одного
-router.get("/:id", validateId, ctrl.getContactById);
+router.post("/", validation(joiSchema), controllerWrapper(ctrl.add));
 
-//TODO Добавление
-router.post("/", validateCreate, ctrl.addContact);
+router.put("/:contactId", validation(joiSchema), controllerWrapper(ctrl.updateById));
 
-//TODO Обновление
-router.put("/:id", validateId, validateUpdate, ctrl.updateById);
+router.patch(
+  "/:contactId/favorite",
+  validationStatusContact(joiSchemaStatusContact),
+  controllerWrapper(ctrl.updateStatusContact)
+);
 
-//TODO Удаление
-router.delete("/:id", validateId, ctrl.removeContact);
+router.delete("/:contactId", controllerWrapper(ctrl.removeById));
+
 module.exports = router;
